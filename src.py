@@ -14,6 +14,7 @@ import urllib.request as ur
 import selenium.webdriver.chrome.webdriver
 import requests
 import lxml
+import os
 from time import sleep
 from lxml import etree
 
@@ -162,14 +163,13 @@ def spider(ips, pages):
     print(grab_res)
 
 def getSrcPages():
-    ips = requests.get('http://localhost:5555/random').text
-    proxies = {'http': 'http://'+ips, 'https': 'http://'+ips}
     head = {
         'accept': 'application/json, text/plain, */*',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
     }
     index_num = 1
     pages = {}
+    proxies = {}
     while True:
         detail_url = 'https://blog.csdn.net/community/home-api/v1/get-business-list?' \
                      'page=%d&size=20&businessType=lately&noMore=false&username=qq_42059060'%index_num
@@ -188,59 +188,67 @@ def getSrcPages():
             proxies = {'http': 'http://'+ips, 'https': 'http://'+ips}
             continue
 
-    with open('urls.json', 'r') as fp:
-        pgs = json.loads(fp.readline())
-    print(pgs)
+    print(pages)
+    final_res = {}
+    for key, value in zip(pages.keys(), pages.values()):
+        final_res[key] = value[0]
 
-    def page_load(pages, title, final_res):
-        ips = requests.get('http://localhost:5555/random').text
-        driver0 = FirefoxSetOptions(ips, load_normal=True)
-        url = pages[title][0]
-        description = pages[title][1]
-        for i in range(2):
-            while True:
-                try:
-                    driver0.get('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&ch=&tn=baidu&bar=&wd=%s&pn=%d'%(title+' '+description, i*10))
-                    WebDriverWait(driver0, 10, 0.5, ignored_exceptions=TimeoutException).until(
-                        lambda x: x.find_element(By.XPATH, "//div[@mu]").is_displayed())
-                    break
-                except Exception as err:
-                    print(err)
-                    driver0.quit()
-                    ips = requests.get('http://localhost:5555/random').text
-                    driver0 = FirefoxSetOptions(ips, load_normal=True)
-                    continue
-            try:
-                res_url = driver0.find_element(By.XPATH, "//div[contains(@mu, 'qq_42059060')]").get_attribute('mu')
-                if res_url == url:
-                    res = driver0.find_element(By.XPATH, "//div[contains(@mu, 'qq_42059060')]//a").get_attribute('href')
-                    final_res[title] = res
-                    break
-            except Exception as err:
-                final_res[title] = url
-                continue
-        print(title, final_res[title])
-        driver0.quit()
-        time.sleep(4)
 
-    final_res = Manager().dict()
-    p = ThreadPool(10)
-    pool_res = []
-    for title in pages.keys():
-        if title in pgs.keys():
-            final_res[title] = pgs[title]
-        else:
-            res = p.apply_async(page_load, args=(pages, title, final_res))
-            pool_res.append(res)
-            time.sleep(1)
-    while len(pool_res) > 0:
-        if pool_res[0].ready():
-            pool_res.pop(0)
-
-    final_res = dict(final_res)
-    with open('urls.json', 'w+') as fp:
-        r = json.dumps(final_res, ensure_ascii=False)
-        fp.write(r)
+    # if os.path.exists('urls.json'):
+    #     with open('urls.json', 'r') as fp:
+    #         pgs = json.loads(fp.readline())
+    #     print(pgs)
+    # else:
+    #     pgs = {}
+    #
+    # def page_load(pages, title, final_res):
+    #     ips = requests.get('http://localhost:5555/random').text
+    #     driver0 = FirefoxSetOptions(ips, load_normal=True)
+    #     url = pages[title][0]
+    #     description = pages[title][1]
+    #     for i in range(2):
+    #         while True:
+    #             try:
+    #                 driver0.get('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&ch=&tn=baidu&bar=&wd=%s&pn=%d'%(title+' '+description, i*10))
+    #                 WebDriverWait(driver0, 10, 0.5, ignored_exceptions=TimeoutException).until(
+    #                     lambda x: x.find_element(By.XPATH, "//div[@mu]").is_displayed())
+    #                 break
+    #             except Exception as err:
+    #                 driver0.quit()
+    #                 ips = requests.get('http://localhost:5555/random').text
+    #                 driver0 = FirefoxSetOptions(ips, load_normal=True)
+    #                 continue
+    #         try:
+    #             res_url = driver0.find_element(By.XPATH, "//div[contains(@mu, 'qq_42059060')]").get_attribute('mu')
+    #             if res_url == url:
+    #                 res = driver0.find_element(By.XPATH, "//div[contains(@mu, 'qq_42059060')]//a").get_attribute('href')
+    #                 final_res[title] = res
+    #                 break
+    #         except Exception as err:
+    #             final_res[title] = url
+    #             continue
+    #     print(title, final_res[title])
+    #     driver0.quit()
+    #     time.sleep(4)
+    #
+    # final_res = Manager().dict()
+    # p = ThreadPool(5)
+    # pool_res = []
+    # for title in pages.keys():
+    #     if title in pgs.keys():
+    #         final_res[title] = pgs[title]
+    #     else:
+    #         res = p.apply_async(page_load, args=(pages, title, final_res))
+    #         pool_res.append(res)
+    #         time.sleep(1)
+    # while len(pool_res) > 0:
+    #     if pool_res[0].ready():
+    #         pool_res.pop(0)
+    #
+    # final_res = dict(final_res)
+    # with open('urls.json', 'w+') as fp:
+    #     r = json.dumps(final_res, ensure_ascii=False)
+    #     fp.write(r)
 
     return final_res
 
