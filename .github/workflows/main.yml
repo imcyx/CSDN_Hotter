@@ -43,9 +43,8 @@ jobs:
 
       # Run main
       - name: Run application
-#        env:
-          LOGIN: ${{ secrets.USERNAME }}
-#          NOTICE: ${{ secrets.NOTICE }}
-#          REPOSITORY: ${{ secrets.REPOSITORY }}
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          MODE: ${{ secrets.MODE }}
         run: python -u main.py
         

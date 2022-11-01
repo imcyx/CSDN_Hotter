@@ -17,9 +17,9 @@ def main():
         raise Exception("Sorry <( _ _ )> ！Reachable username should be provided")
 
     if mode == 'explore':
-        mode = False
-    else:
         mode = True
+    else:
+        mode = False
 
     runner(username, mode)
 
