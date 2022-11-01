@@ -32,26 +32,15 @@ jobs:
         run: sh ./scripts/install.sh
 
       - name: Install environments
-        run: docker-compose up
+        run: docker-compose up -d
 
       - name: Install packages
-        run: pip install requests
+        run: pip install -r requirements.txt
 
-      - name: Run
-        run: python -u test.py
-#      - name: Install firefox
-#        run: sh ./shell/firefox_install.sh
-
-#      - name: Install geckodriver
-#        run: sh ./shell/geckodriver_install.sh
-#
-#      - name: Install packages
-#        run: pip install -r requirements.txt
-#
-#      - name: Run application
+      - name: Run application
 #        env:
 #          LOGIN: ${{ secrets.LOGIN }}
 #          NOTICE: ${{ secrets.NOTICE }}
 #          REPOSITORY: ${{ secrets.REPOSITORY }}
-#        run: python -u src/main.py
+        run: python -u src.py
         
