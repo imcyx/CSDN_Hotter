@@ -28,8 +28,11 @@ jobs:
           python-version: "3.8"
           architecture: "x64"
 
+      - name: Install scripts
+        run: sh ./scripts/install.sh
+
       - name: Install environments
-        run: docker run germey/proxypool
+        run: docker-compose up
 
       - name: Install packages
         run: pip install requests
