@@ -8,6 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+      pool:
+        image: germey/proxypool
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0
@@ -17,20 +27,22 @@ jobs:
         with:
           python-version: "3.8"
           architecture: "x64"
-    
-      - name: Install firefox
-        run: sh ./shell/firefox_install.sh
-      
-      - name: Install geckodriver
-        run: sh ./shell/geckodriver_install.sh
 
-      - name: Install packages
-        run: pip install -r requirements.txt
+      - name: Run
+        run: python -u test.py
+#      - name: Install firefox
+#        run: sh ./shell/firefox_install.sh
 
-      - name: Run application
-        env:
-          LOGIN: ${{ secrets.LOGIN }}
-          NOTICE: ${{ secrets.NOTICE }}
-          REPOSITORY: ${{ secrets.REPOSITORY }}
-        run: python -u src/main.py
+#      - name: Install geckodriver
+#        run: sh ./shell/geckodriver_install.sh
+#
+#      - name: Install packages
+#        run: pip install -r requirements.txt
+#
+#      - name: Run application
+#        env:
+#          LOGIN: ${{ secrets.LOGIN }}
+#          NOTICE: ${{ secrets.NOTICE }}
+#          REPOSITORY: ${{ secrets.REPOSITORY }}
+#        run: python -u src/main.py
         
