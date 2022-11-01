@@ -17,7 +17,6 @@ jobs:
         image: redis
       pool:
         image: germey/proxypool
-        run: docker run germey/proxypool
 
     steps:
       - name: Checkout
@@ -28,6 +27,9 @@ jobs:
         with:
           python-version: "3.8"
           architecture: "x64"
+
+      - name: Install environments
+        run: docker run germey/proxypool
 
       - name: Install packages
         run: pip install requests
