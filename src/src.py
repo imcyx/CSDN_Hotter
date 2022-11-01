@@ -141,7 +141,7 @@ def spider(ips, pages):
         p.apply_async(requests.get, args=(url, ), kwds={'headers':head, 'allow_redirects':True, 'proxies':proxies, 'timeout': 15})
         # res = requests.get(url, headers=head, allow_redirects=True)#, proxies=proxies)
         time.sleep(0.3)
-    res = requests.get(pages[0], headers=head, allow_redirects=True, proxies=proxies, cookies=cookies, timeout=10)
+    res = requests.get(url, headers=head, allow_redirects=True, proxies=proxies, cookies=cookies, timeout=10)
     res = etree.HTML(res.content).xpath('//dl[@class="text-center"]/@title')
     grab_res = f"周排名：{res[1]}，总排名：{res[2]}，访问量：{res[3]}，积分：{res[5]}，粉丝：{res[6]}，获赞：{res[7]}，收藏：{res[8]}，"
     print(grab_res)
