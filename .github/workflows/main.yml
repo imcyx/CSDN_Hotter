@@ -17,6 +17,7 @@ jobs:
         image: redis
       pool:
         image: germey/proxypool
+        run: docker run germey/proxypool
 
     steps:
       - name: Checkout
