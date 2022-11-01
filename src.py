@@ -162,24 +162,31 @@ def spider(ips, pages):
     print(grab_res)
 
 def getSrcPages():
+    ips = requests.get('http://localhost:5555/random').text
+    proxies = {'http': 'http://'+ips, 'https': 'http://'+ips}
     head = {
         'accept': 'application/json, text/plain, */*',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
     }
-    index_num = 0
+    index_num = 1
     pages = {}
     while True:
-        index_num += 1
         detail_url = 'https://blog.csdn.net/community/home-api/v1/get-business-list?' \
                      'page=%d&size=20&businessType=lately&noMore=false&username=qq_42059060'%index_num
-        results = requests.get(detail_url, headers=head).json()
-        if results['message'] == 'success':
-            res = results['data']['list']
-            if res is None:
-                break
-            else:
-                for j in res:
-                    pages[j['title']] = [j['url'], j['description']]
+        try:
+            results = requests.get(detail_url, headers=head, proxies=proxies).json()
+            if results['message'] == 'success':
+                res = results['data']['list']
+                if res is None:
+                    break
+                else:
+                    for j in res:
+                        pages[j['title']] = [j['url'], j['description']]
+            index_num += 1
+        except:
+            ips = requests.get('http://localhost:5555/random').text
+            proxies = {'http': 'http://'+ips, 'https': 'http://'+ips}
+            continue
 
     with open('urls.json', 'r') as fp:
         pgs = json.loads(fp.readline())
