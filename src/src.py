@@ -9,18 +9,16 @@
 
 import requests
 import time
-from lxml import etree
-
-import user_agent
 from selenium import webdriver
 from selenium.webdriver import chrome
 from selenium.webdriver import firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
-
+from lxml import etree
 from multiprocessing.pool import ThreadPool
 
+from src import user_agent
 
 def FetchIP(host='http://localhost:5555/random'):
     ip = requests.get(host).text
