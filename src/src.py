@@ -266,10 +266,10 @@ def runner(username, mode=False):
             # print(page_split)
             # spider(ip, page_split)
             if mode is True:
-                res = p.apply_async(spider, args=(ip, page_split))
-            else:
                 spd = ExploreSpider(proxies=ip)
                 res = p.apply_async(spd.spider, args=(page_split, ))
+            else:
+                res = p.apply_async(spider, args=(ip, page_split))
             results.append(res)
             time.sleep(1)
 
