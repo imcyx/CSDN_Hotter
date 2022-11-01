@@ -16,10 +16,8 @@ def main():
     if username == '':
         raise Exception("Sorry <( _ _ )> ！Reachable username should be provided")
 
-    if mode == 'explore':
-        mode = True
-    else:
-        mode = False
+    if mode != 'geckodriver' and mode != 'chromedriver':
+        mode = None
 
     runner(username, mode)
 

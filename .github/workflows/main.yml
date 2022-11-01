@@ -29,7 +29,7 @@ jobs:
           python-version: "3.8"
           architecture: "x64"
 
-      # Install docker-compose
+      # Install docker-compose and drivers
       - name: Install scripts
         run: sh ./scripts/install.sh
 

@@ -237,7 +237,7 @@ def getSrcPages(username):
     return final_res
 
 
-def runner(username, mode=False):
+def runner(username, mode=None):
     # last_stamp = time.time()
     pages = getSrcPages(username)
     page_urls = list(pages.values())
@@ -258,15 +258,15 @@ def runner(username, mode=False):
             ip = FetchIP()
             # page_split = random.sample(list(pages.values()), gap)
             if index == pool_len - 1:
-                page_split = page_urls[index * gap:] if mode is True else page_urls[::-1 ** index]
+                page_split = page_urls[index * gap:] if mode is not None else page_urls[::-1 ** index]
                 index = 0
             else:
-                page_split = page_urls[index * gap:(index + 1) * gap] if mode is True else page_urls[::-1 ** index]
+                page_split = page_urls[index * gap:(index + 1) * gap] if mode is not None else page_urls[::-1 ** index]
                 index += 1
             # print(page_split)
             # spider(ip, page_split)
-            if mode is True:
-                spd = ExploreSpider(proxies=ip)
+            if mode is not None:
+                spd = ExploreSpider(mode, proxies=ip)
                 res = p.apply_async(spd.spider, args=(page_split, ))
             else:
                 res = p.apply_async(spider, args=(ip, page_split))
