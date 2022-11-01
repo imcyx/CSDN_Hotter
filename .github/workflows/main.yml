@@ -3,7 +3,7 @@ name: CSDN Hotter
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0-59 * * * *"
+    - cron: "*/2 * * * *"
 
 jobs:
   build:
@@ -16,6 +16,7 @@ jobs:
         # Docker Hub image
         image: redis
       pool:
+        # Docker Hub image
         image: germey/proxypool
 
     steps:
@@ -28,19 +29,23 @@ jobs:
           python-version: "3.8"
           architecture: "x64"
 
+      # Install docker-compose
       - name: Install scripts
         run: sh ./scripts/install.sh
 
+      # Start the containers in the background
       - name: Install environments
         run: docker-compose up -d
 
+      # Install requirement packages
       - name: Install packages
         run: pip install -r requirements.txt
 
+      # Run main
       - name: Run application
 #        env:
-#          LOGIN: ${{ secrets.LOGIN }}
+          LOGIN: ${{ secrets.USERNAME }}
 #          NOTICE: ${{ secrets.NOTICE }}
 #          REPOSITORY: ${{ secrets.REPOSITORY }}
-        run: python -u src.py
+        run: python -u main.py
         
