@@ -1,4 +1,4 @@
-name: Daily report
+name: CSDN Hotter
 
 on:
   workflow_dispatch:
