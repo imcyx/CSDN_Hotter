@@ -3,7 +3,7 @@ name: CSDN Hotter
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/2 * * * *"
+    - cron: "* */3 * * *"
 
 jobs:
   build:
