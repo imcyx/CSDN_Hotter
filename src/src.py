@@ -247,6 +247,7 @@ def runner(username, mode=None):
     p = ThreadPool(pool_len)
     gap = len(pages) // pool_len
 
+    start = time.time()
     while True:
         # try:
         if len(results) >= pool_len and results[0].ready():
@@ -272,6 +273,10 @@ def runner(username, mode=None):
                 res = p.apply_async(spider, args=(ip, page_split))
             results.append(res)
             time.sleep(1)
+
+        if time.time() - start > 3600 * 5:
+            print('end')
+            break
 
 
     # except Exception as err:
