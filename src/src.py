@@ -274,7 +274,7 @@ def runner(username, mode=None):
             results.append(res)
             time.sleep(1)
 
-        if time.time() - start > 3600 * 5:
+        if time.time() - start > 3600 * 2:
             print('end')
             break
 
